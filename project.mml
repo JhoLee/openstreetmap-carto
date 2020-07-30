@@ -11,7 +11,6 @@ center:
   - 0
   - 0
   - 4
-format: png
 interactivity: false
 minzoom: 0
 maxzoom: 22
@@ -364,7 +363,7 @@ Layer:
     <<: *extents
     Datasource:
       <<: *osm2pgsql
-      table: |-
+      table: |n
         (SELECT
             way, man_made
           FROM planet_osm_polygon
@@ -623,7 +622,7 @@ Layer:
       minzoom: 8
   - id: turning-circle-casing
     geometry: point
-    <<: *extents
+    <<: *extent
     Datasource:
       <<: *osm2pgsql
       table: &turning-circle_sql |-
@@ -892,7 +891,7 @@ Layer:
             CASE WHEN tags->'intermittent' IN ('yes')
               OR tags->'seasonal' IN ('yes', 'spring', 'summer', 'autumn', 'winter', 'wet_season', 'dry_season')
               THEN 'yes' ELSE 'no' END AS int_intermittent,
-            CASE WHEN tunnel IN ('yes', 'culvert') 
+            CASE WHEN tunnel IN ('yes', 'culvert')
               OR waterway = 'canal' AND tunnel = 'flooded'
               THEN 'yes' ELSE 'no' END AS int_tunnel,
             'yes' AS bridge
@@ -1037,6 +1036,7 @@ Layer:
     properties:
       cache-features: true
       minzoom: 11
+###
   - id: necountries
     geometry: linestring
     <<: *extents
@@ -2111,7 +2111,7 @@ Layer:
             CASE WHEN tags->'intermittent' IN ('yes')
               OR tags->'seasonal' IN ('yes', 'spring', 'summer', 'autumn', 'winter', 'wet_season', 'dry_season')
               THEN 'yes' ELSE 'no' END AS int_intermittent,
-            CASE WHEN tunnel IN ('yes', 'culvert') 
+            CASE WHEN tunnel IN ('yes', 'culvert')
               OR waterway = 'canal' AND tunnel = 'flooded'
               THEN 'yes' ELSE 'no' END AS int_tunnel
           FROM planet_osm_line
@@ -2250,13 +2250,3 @@ Layer:
     properties:
       cache-features: true
       minzoom: 14
-  - id: text-low-priority
-    geometry: point
-    <<: *extents
-    Datasource:
-      <<: *osm2pgsql
-      # Include values that are rendered as icon without label to prevent mismatch between icons and labels,
-      # see https://github.com/gravitystorm/openstreetmap-carto/pull/1349#issuecomment-77805678
-      table: *amenity_low_priority_sql
-    properties:
-      minzoom: 17
